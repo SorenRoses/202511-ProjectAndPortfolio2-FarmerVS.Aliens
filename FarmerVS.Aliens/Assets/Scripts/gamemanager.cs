@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using NUnit.Framework;
 
 public class gamemanager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class gamemanager : MonoBehaviour
     public GameObject player;
     public playerController controller;
     public GameObject cow;
+
+ 
 
     public bool isPaused;
 
