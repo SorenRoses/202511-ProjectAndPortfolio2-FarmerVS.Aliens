@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine.AI;
 
 public class enemyAI : MonoBehaviour, IDamage
@@ -18,19 +19,18 @@ public class enemyAI : MonoBehaviour, IDamage
 
     Color colorOrig;
 
-    bool playerInTrigger;
+    bool cowInTrigger;
 
     float shootTimer;
-    float angleToPlayer;
+    float angleToCow;
     float stoppingDistanceOrig;
 
-    Vector3 playerDir;
+    Vector3 cowDir;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Color color = model.material.color;
-        colorOrig = color;
+        colorOrig = model.material.color;
         gamemanager.instance.updateGameGoal(1);
         stoppingDistanceOrig = agent.stoppingDistance;
     }
@@ -40,27 +40,27 @@ public class enemyAI : MonoBehaviour, IDamage
     {
         shootTimer += Time.deltaTime;
 
-        if (playerInTrigger && canSeePlayer())
+        if (cowInTrigger && canSeeCow())
         {
 
         }
     }
 
-    bool canSeePlayer()
+    bool canSeeCow()
     {
-        playerDir = gamemanager.instance.player.transform.position - headPos.position;
-        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
+        cowDir = gamemanager.instance.cow.transform.position - headPos.position;
+        angleToCow = Vector3.Angle(cowDir, transform.forward);
 
-        Debug.DrawRay(headPos.position, playerDir);
+        Debug.DrawRay(headPos.position, cowDir);
 
         RaycastHit hit;
-        if (Physics.Raycast(headPos.position, playerDir, out hit))
+        if (Physics.Raycast(headPos.position, cowDir, out hit))
         {
             Debug.Log(hit.collider.name);
 
-            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
+            if (angleToCow <= FOV && hit.collider.CompareTag("Cow"))
             {
-                agent.SetDestination(gamemanager.instance.player.transform.position);
+                agent.SetDestination(gamemanager.instance.cow.transform.position);
 
                 if (shootTimer >= shootRate)
                 {
@@ -78,23 +78,23 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void faceTarget()
     {
-        Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, transform.position.y, playerDir.z));
+        Quaternion rot = Quaternion.LookRotation(new Vector3(cowDir.x, transform.position.y, cowDir.z));
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, faceTargetSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Cow"))
         {
-            playerInTrigger = true;
+            cowInTrigger = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Cow"))
         {
-            playerInTrigger = false;
+            cowInTrigger = false;
         }
     }
 
