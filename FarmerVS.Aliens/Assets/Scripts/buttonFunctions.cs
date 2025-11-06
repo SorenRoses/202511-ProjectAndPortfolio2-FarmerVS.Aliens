@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class buttonFunctions : MonoBehaviour, 
+public class buttonFunctions : MonoBehaviour
 {
     public void resume()
     {
@@ -17,15 +17,9 @@ public class buttonFunctions : MonoBehaviour,
     public void quit()
     {
 #if UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
+   UnityEditor.EditorApplication.isPlaying = false;
 #else   
-    Application.Quit();
+   Application.Quit();
 #endif
-    }
-
-    public void loadLevel(int lvl)
-    {
-        SceneManager.LoadScene(lvl);
-        gamemanager.instance.stateUnpause();
     }
 }
