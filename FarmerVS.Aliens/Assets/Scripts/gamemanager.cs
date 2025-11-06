@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class gamemanager : MonoBehaviour
 {
-
     public static gamemanager instance;
 
     [SerializeField] GameObject menuActive;
@@ -38,9 +37,9 @@ public class gamemanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 statePause();
                 menuActive = menuPause;
@@ -76,9 +75,9 @@ public class gamemanager : MonoBehaviour
         gameGoalCount += amount;
         gameGoalCountText.text = gameGoalCount.ToString("F0");
 
-        if(gameGoalCount <= 0)
+        if (gameGoalCount <= 0)
         {
-            // YOU WIN!!
+            // You Win!
             statePause();
             menuActive = menuWin;
             menuActive.SetActive(true);

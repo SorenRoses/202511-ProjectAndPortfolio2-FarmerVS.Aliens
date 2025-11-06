@@ -7,6 +7,7 @@ public class playerController : MonoBehaviour, IDamage
 
     [SerializeField] CharacterController controller;
 
+
     [SerializeField] int HP;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
@@ -18,8 +19,8 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] int shootDist;
     [SerializeField] float shootRate;
 
-    private Vector3 moveDir;
-    private Vector3 playerVel;
+    Vector3 moveDir;
+    Vector3 playerVel;
 
     int jumpCount;
     int HPOrig;
@@ -27,6 +28,7 @@ public class playerController : MonoBehaviour, IDamage
     float shootTimer;
 
     bool isSprinting;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
