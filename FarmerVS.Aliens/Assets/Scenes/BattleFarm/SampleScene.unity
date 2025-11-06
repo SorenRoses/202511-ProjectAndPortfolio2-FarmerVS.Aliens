@@ -26348,6 +26348,10 @@ PrefabInstance:
       value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 9047645039686382662, guid: 240ce187972b0634fb0d7df22b4f3ded, type: 3}
+      propertyPath: FOV
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 9047645039686382662, guid: 240ce187972b0634fb0d7df22b4f3ded, type: 3}
       propertyPath: shootRate
       value: 1
       objectReference: {fileID: 0}

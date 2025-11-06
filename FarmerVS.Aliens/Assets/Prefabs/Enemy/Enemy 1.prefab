@@ -615,10 +615,10 @@ MonoBehaviour:
   model: {fileID: 13700000, guid: f4209d51d1ad0434299f2d498ee076ba, type: 3}
   headPos: {fileID: 8472118751998818038}
   HP: 3
-  FOV: 90
-  faceTargetSpeed: 0
+  FOV: 45
+  faceTargetSpeed: 8
   bullet: {fileID: 1203817738937806561, guid: 23fa38475caab0247a3cc5ac19d4373c, type: 3}
-  shootRate: 0
+  shootRate: 0.5
   shootPos: {fileID: 2074498475142792715}
 --- !u!195 &4356078261068858781
 NavMeshAgent:
@@ -652,7 +652,7 @@ Animator:
   m_GameObject: {fileID: 5182294585439088789}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f4209d51d1ad0434299f2d498ee076ba, type: 3}
-  m_Controller: {fileID: 9100000, guid: cf21176bd92d2e34bac89833a2f11fa2, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2ade877805d14c6469467c72dcb972af, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
