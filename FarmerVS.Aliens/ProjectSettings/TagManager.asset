@@ -9,17 +9,18 @@ TagManager:
   - Chicken
   - Pig
   - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Player Bullet
+  - Enemy Bullet
+  - Cow
   - 
   - 
   - 

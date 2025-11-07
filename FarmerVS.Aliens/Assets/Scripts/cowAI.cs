@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine.AI;
 
 
-public class enemyAI : MonoBehaviour, IDamage
+public class cowAI : MonoBehaviour, IDamage
 {
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
@@ -14,19 +14,20 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] int FOV;
     [SerializeField] int faceTargetSpeed;
 
-    [SerializeField] GameObject bullet;
-    [SerializeField] float shootRate;
-    [SerializeField] Transform shootPos;
+    [SerializeField] float fleeDistance;
+
 
     Color colorOrig;
 
-    bool cowInTrigger;
+    bool enemyInTrigger;
 
-    float shootTimer;
-    float angleToCow;
+
+    float angleToEnemy;
     float stoppingDistanceOrig;
 
-    Vector3 cowDir;
+    Vector3 enemyDir;
+
+    Transform seenEnemy;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -39,63 +40,69 @@ public class enemyAI : MonoBehaviour, IDamage
     // Update is called once per frame
     void Update()
     {
-        shootTimer += Time.deltaTime;
 
-        if (cowInTrigger && canSeeCow())
+        if (enemyInTrigger && canSeeEnemy())
         {
-
+            runAway();
         }
     }
 
-    bool canSeeCow()
+    bool canSeeEnemy()
     {
-        cowDir = gamemanager.instance.cow.transform.position - headPos.position;
-        angleToCow = Vector3.Angle(cowDir, transform.forward);
+        if (seenEnemy == null)
+            return false;
 
-        Debug.DrawRay(headPos.position, cowDir);
+        enemyDir = seenEnemy.position - headPos.position;
+        angleToEnemy = Vector3.Angle(enemyDir, transform.forward);
+
+        Debug.DrawRay(headPos.position, enemyDir);
 
         RaycastHit hit;
-        if (Physics.Raycast(headPos.position, cowDir, out hit))
+        if (Physics.Raycast(headPos.position, enemyDir, out hit))
         {
             Debug.Log(hit.collider.name);
 
-            if (angleToCow <= FOV && hit.collider.CompareTag("Cow"))
+            if (angleToEnemy <= FOV && hit.collider.CompareTag("Enemy"))
             {
-                agent.SetDestination(gamemanager.instance.cow.transform.position);
-
-                if (shootTimer >= shootRate)
-                {
-                    shoot();
-                }
-
-                if (agent.remainingDistance <= stoppingDistanceOrig)
-                    faceTarget();
-
+                
                 return true;
             }
         }
         return false;
     }
 
+    void runAway()
+    {
+        Vector3 dirAway = transform.position - seenEnemy.position;
+   
+        Vector3 fleeTarget = transform.position + dirAway * fleeDistance;
+        agent.SetDestination(fleeTarget);
+
+        if (agent.remainingDistance <= stoppingDistanceOrig)
+            faceTarget();
+    }
+
     void faceTarget()
     {
-        Quaternion rot = Quaternion.LookRotation(new Vector3(cowDir.x, transform.position.y, cowDir.z));
+        Quaternion rot = Quaternion.LookRotation(new Vector3(enemyDir.x, transform.position.y, enemyDir.z));
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, faceTargetSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Cow"))
+        if (other.CompareTag("Enemy"))
         {
-            cowInTrigger = true;
+            enemyInTrigger = true;
+            seenEnemy = other.transform;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Cow"))
+        if (other.CompareTag("Enemy"))
         {
-            cowInTrigger = false;
+            enemyInTrigger = false;
+            seenEnemy = null;
         }
     }
 
@@ -122,9 +129,5 @@ public class enemyAI : MonoBehaviour, IDamage
     }
 
 
-    void shoot()
-    {
-        shootTimer = 0;
-        Instantiate(bullet, shootPos.position, transform.rotation);
-    }
+   
 }

@@ -19,6 +19,7 @@ public class gamemanager : MonoBehaviour
     public GameObject player;
     public playerController controller;
     public GameObject cow;
+    
 
  
 
@@ -36,7 +37,9 @@ public class gamemanager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         GameObject gameObject1 = GameObject.FindWithTag("Cow");
+       
         cow = gameObject1;
+       
         controller = player.GetComponent<playerController>();
     }
 
