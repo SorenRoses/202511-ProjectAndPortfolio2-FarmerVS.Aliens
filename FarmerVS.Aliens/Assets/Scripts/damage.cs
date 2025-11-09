@@ -32,9 +32,9 @@ public class damage : MonoBehaviour
     {
         if (type == damageType.homing)
         {
-            if (rb != null && gamemanager.instance != null && gamemanager.instance.player != null)
+            if (rb != null && gamemanager.instance != null && gamemanager.instance.Player != null)
             {
-                Vector3 direction = (gamemanager.instance.player.transform.position - transform.position).normalized;
+                Vector3 direction = (gamemanager.instance.Player.transform.position - transform.position).normalized;
                 rb.linearVelocity = direction * speed;
             }
         }
