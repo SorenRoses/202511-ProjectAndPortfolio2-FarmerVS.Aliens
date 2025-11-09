@@ -1416,7 +1416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8710115337637059064, guid: 4c204906d4daa3547af7ec25d1653cd5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000038146973
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8710115337637059064, guid: 4c204906d4daa3547af7ec25d1653cd5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16835,7 +16835,11 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'forearm.R'\n\tTransform 'shoulder.R'\n\tTransform
+    'upper_arm.L'\n\tTransform 'upper_arm.R'\n\tTransform 'hand.R'\n\tTransform 'forearm.L'\n\tTransform
+    'shoulder.L'\n\tTransform 'hand.L'\n\tFrom animation clip 'ArmsUp_Aim'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -28124,7 +28128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2536267428180160170, guid: 3c0b66c1fb55cd34994e034186a852c1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.731
+      value: -0.734
       objectReference: {fileID: 0}
     - target: {fileID: 2536267428180160170, guid: 3c0b66c1fb55cd34994e034186a852c1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -28173,6 +28177,15 @@ PrefabInstance:
     - target: {fileID: 4923017511828925634, guid: 3c0b66c1fb55cd34994e034186a852c1, type: 3}
       propertyPath: m_LocalScale.z
       value: 95
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490003404539540688, guid: 3c0b66c1fb55cd34994e034186a852c1, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'forearm.R'\n\tTransform 'shoulder.R'\n\tTransform
+        'upper_arm.L'\n\tTransform 'upper_arm.R'\n\tTransform 'hand.R'\n\tTransform
+        'forearm.L'\n\tTransform 'shoulder.L'\n\tTransform 'hand.L'\n\tFrom animation
+        clip 'ArmsUp_Aim'"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
