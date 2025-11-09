@@ -80,10 +80,11 @@ public class playerController : MonoBehaviour, IDamage
 
         // Update animator Speed parameter based on movement magnitude
         float moveMagnitude = new Vector3(inputX, 0, inputZ).magnitude;
-        animator.SetFloat("Speed", moveMagnitude);
-
-        // Update animator IsJumping parameter, make sure this parameter exists in your Animator
-        animator.SetBool("IsJumping", !controller.isGrounded);
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", moveMagnitude);
+            // Removed animator.SetBool("IsJumping", ...) to avoid errors
+        }
 
         // Shooting input and logic
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
@@ -98,13 +99,13 @@ public class playerController : MonoBehaviour, IDamage
         {
             speed = baseSpeed * sprintMod;
             isSprinting = true;
-            animator.SetBool("IsSprinting", true);
+            if (animator != null) animator.SetBool("IsSprinting", true);
         }
         else if (Input.GetButtonUp("Sprint") && isSprinting)
         {
             speed = baseSpeed;
             isSprinting = false;
-            animator.SetBool("IsSprinting", false);
+            if (animator != null) animator.SetBool("IsSprinting", false);
         }
     }
 
@@ -133,7 +134,7 @@ public class playerController : MonoBehaviour, IDamage
             }
         }
 
-        animator.SetTrigger("Shoot");
+        if (animator != null) animator.SetTrigger("Shoot");
     }
 
     public void takeDamage(int amount)
