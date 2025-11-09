@@ -8,11 +8,11 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] CharacterController controller;
 
     [SerializeField] int HP;
-    [SerializeField] int speed;
-    [SerializeField] int sprintMod;
-    [SerializeField] int jumpSpeed;
+    [SerializeField] float speed;         // Changed to float for smooth movement
+    [SerializeField] float sprintMod;     // Changed to float
+    [SerializeField] float jumpSpeed;     // Changed to float
     [SerializeField] int jumpCountMax;
-    [SerializeField] int gravity;
+    [SerializeField] float gravity;       // Changed to float
 
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
@@ -30,16 +30,17 @@ public class playerController : MonoBehaviour, IDamage
 
     Animator animator;  // Animator reference
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    float baseSpeed;
+
     void Start()
     {
         HPOrig = HP;
         updatePlayerUI();
 
         animator = GetComponent<Animator>();  // Get Animator component
+        baseSpeed = speed;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red, ~ignoreLayer);
@@ -75,6 +76,8 @@ public class playerController : MonoBehaviour, IDamage
         float moveMagnitude = new Vector3(inputX, 0, inputZ).magnitude;
         animator.SetFloat("Speed", moveMagnitude);
 
+        animator.SetBool("IsJumping", !controller.isGrounded);
+
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             shoot();
@@ -83,15 +86,17 @@ public class playerController : MonoBehaviour, IDamage
 
     void sprint()
     {
-        if (Input.GetButtonDown("Sprint"))
+        if (Input.GetButtonDown("Sprint") && !isSprinting)
         {
-            speed *= sprintMod;
+            speed = baseSpeed * sprintMod;
             isSprinting = true;
+            animator.SetBool("IsSprinting", true);
         }
-        else if (Input.GetButtonUp("Sprint"))
+        else if (Input.GetButtonUp("Sprint") && isSprinting)
         {
-            speed /= sprintMod;
+            speed = baseSpeed;
             isSprinting = false;
+            animator.SetBool("IsSprinting", false);
         }
     }
 
@@ -119,6 +124,8 @@ public class playerController : MonoBehaviour, IDamage
                 dmg.takeDamage(shootDamage);
             }
         }
+
+        animator.SetTrigger("Shoot");
     }
 
     public void takeDamage(int amount)
