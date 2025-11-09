@@ -7,7 +7,6 @@ public class playerController : MonoBehaviour, IDamage
 
     [SerializeField] CharacterController controller;
 
-
     [SerializeField] int HP;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
@@ -29,11 +28,15 @@ public class playerController : MonoBehaviour, IDamage
 
     bool isSprinting;
 
+    Animator animator;  // Animator reference
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         HPOrig = HP;
         updatePlayerUI();
+
+        animator = GetComponent<Animator>();  // Get Animator component
     }
 
     // Update is called once per frame
@@ -49,7 +52,7 @@ public class playerController : MonoBehaviour, IDamage
 
     void movement()
     {
-        if(controller.isGrounded)
+        if (controller.isGrounded)
         {
             playerVel = Vector3.zero;
             jumpCount = 0;
@@ -59,13 +62,20 @@ public class playerController : MonoBehaviour, IDamage
             playerVel.y -= gravity * Time.deltaTime;
         }
 
-        moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
+        float inputX = Input.GetAxis("Horizontal");
+        float inputZ = Input.GetAxis("Vertical");
+
+        moveDir = inputX * transform.right + inputZ * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
         jump();
         controller.Move(playerVel * Time.deltaTime);
 
-        if(Input.GetButton("Fire1") && shootTimer >= shootRate)
+        // Update animator Speed parameter based on movement magnitude
+        float moveMagnitude = new Vector3(inputX, 0, inputZ).magnitude;
+        animator.SetFloat("Speed", moveMagnitude);
+
+        if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             shoot();
         }
@@ -73,19 +83,21 @@ public class playerController : MonoBehaviour, IDamage
 
     void sprint()
     {
-        if(Input.GetButtonDown("Sprint"))
+        if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
+            isSprinting = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
+            isSprinting = false;
         }
     }
 
     void jump()
     {
-        if(Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
@@ -97,7 +109,7 @@ public class playerController : MonoBehaviour, IDamage
         shootTimer = 0;
 
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
         {
             Debug.Log(hit.collider.name);
 
