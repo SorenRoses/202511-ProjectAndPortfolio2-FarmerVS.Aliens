@@ -8,11 +8,11 @@ public class playerController : MonoBehaviour, IDamage
     [SerializeField] CharacterController controller;
 
     [SerializeField] int HP;
-    [SerializeField] float speed;         // Changed to float for smooth movement
-    [SerializeField] float sprintMod;     // Changed to float
-    [SerializeField] float jumpSpeed;     // Changed to float
-    [SerializeField] int jumpCountMax;
-    [SerializeField] float gravity;       // Changed to float
+    [SerializeField] float speed;         // Movement speed
+    [SerializeField] float sprintMod;    // Sprint speed multiplier
+    [SerializeField] float jumpSpeed;    // Initial jump velocity
+    [SerializeField] int jumpCountMax;   // Max allowed jumps (e.g., double jump)
+    [SerializeField] float gravity;      // Gravity acceleration
 
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
@@ -53,31 +53,39 @@ public class playerController : MonoBehaviour, IDamage
 
     void movement()
     {
+        // Reset jump count and vertical velocity if grounded
         if (controller.isGrounded)
         {
-            playerVel = Vector3.zero;
+            playerVel.y = -2f;  // Small downward force to keep grounded
             jumpCount = 0;
         }
         else
         {
-            playerVel.y -= gravity * Time.deltaTime;
+            playerVel.y -= gravity * Time.deltaTime;  // Apply gravity while in air
         }
 
+        // Get input for horizontal and vertical movement
         float inputX = Input.GetAxis("Horizontal");
         float inputZ = Input.GetAxis("Vertical");
 
+        // Calculate movement direction relative to player orientation
         moveDir = inputX * transform.right + inputZ * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
+        // Handle jumping input
         jump();
+
+        // Apply vertical velocity (gravity and jump) to character controller
         controller.Move(playerVel * Time.deltaTime);
 
         // Update animator Speed parameter based on movement magnitude
         float moveMagnitude = new Vector3(inputX, 0, inputZ).magnitude;
         animator.SetFloat("Speed", moveMagnitude);
 
+        // Update animator IsJumping parameter, make sure this parameter exists in your Animator
         animator.SetBool("IsJumping", !controller.isGrounded);
 
+        // Shooting input and logic
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             shoot();
