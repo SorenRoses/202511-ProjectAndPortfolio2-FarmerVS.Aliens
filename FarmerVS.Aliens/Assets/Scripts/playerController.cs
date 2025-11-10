@@ -27,6 +27,7 @@ public class playerController : MonoBehaviour, IDamage
     float shootTimer;
 
     bool isSprinting;
+    bool isShooting;  // New flag to track shooting state
 
     Animator animator;  // Animator reference
 
@@ -49,6 +50,16 @@ public class playerController : MonoBehaviour, IDamage
         movement();
 
         sprint();
+
+        // Reset Shoot parameter if not firing
+        if (!Input.GetButton("Fire1") && isShooting)
+        {
+            isShooting = false;
+            if (animator != null)
+            {
+                animator.SetBool("Shoot", false);
+            }
+        }
     }
 
     void movement()
@@ -83,7 +94,6 @@ public class playerController : MonoBehaviour, IDamage
         if (animator != null)
         {
             animator.SetFloat("Speed", moveMagnitude);
-            // Removed animator.SetBool("IsJumping", ...) to avoid errors
         }
 
         // Shooting input and logic
@@ -134,7 +144,12 @@ public class playerController : MonoBehaviour, IDamage
             }
         }
 
-        if (animator != null) animator.SetTrigger("Shoot");
+        if (animator != null)
+        {
+            // Set Shoot bool true when firing
+            animator.SetBool("Shoot", true);
+            isShooting = true;
+        }
     }
 
     public void takeDamage(int amount)
