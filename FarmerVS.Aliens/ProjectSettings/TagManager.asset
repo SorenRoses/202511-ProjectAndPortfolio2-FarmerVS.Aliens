@@ -9,7 +9,6 @@ TagManager:
   - Chicken
   - Pig
   - Ground
-  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -17,10 +16,10 @@ TagManager:
   - Player
   - Water
   - UI
+  - Player bullet
   - Enemy
-  - Player Bullet
   - Enemy Bullet
-  - Cow
+  - 
   - 
   - 
   - 

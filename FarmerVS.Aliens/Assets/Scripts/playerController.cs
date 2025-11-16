@@ -7,13 +7,12 @@ public class playerController : MonoBehaviour, IDamage
 
     [SerializeField] CharacterController controller;
 
-
     [SerializeField] int HP;
-    [SerializeField] int speed;
-    [SerializeField] int sprintMod;
-    [SerializeField] int jumpSpeed;
-    [SerializeField] int jumpCountMax;
-    [SerializeField] int gravity;
+    [SerializeField] float speed;         // Movement speed
+    [SerializeField] float sprintMod;    // Sprint speed multiplier
+    [SerializeField] float jumpSpeed;    // Initial jump velocity
+    [SerializeField] int jumpCountMax;   // Max allowed jumps (e.g., double jump)
+    [SerializeField] float gravity;      // Gravity acceleration
 
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
@@ -28,15 +27,21 @@ public class playerController : MonoBehaviour, IDamage
     float shootTimer;
 
     bool isSprinting;
+    bool isShooting;  // New flag to track shooting state
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    Animator animator;  // Animator reference
+
+    float baseSpeed;
+
     void Start()
     {
         HPOrig = HP;
         updatePlayerUI();
+
+        animator = GetComponent<Animator>();  // Get Animator component
+        baseSpeed = speed;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red, ~ignoreLayer);
@@ -45,27 +50,54 @@ public class playerController : MonoBehaviour, IDamage
         movement();
 
         sprint();
+
+        // Reset Shoot parameter if not firing
+        if (!Input.GetButton("Fire1") && isShooting)
+        {
+            isShooting = false;
+            if (animator != null)
+            {
+                animator.SetBool("Shoot", false);
+            }
+        }
     }
 
     void movement()
     {
-        if(controller.isGrounded)
+        // Reset jump count and vertical velocity if grounded
+        if (controller.isGrounded)
         {
-            playerVel = Vector3.zero;
+            playerVel.y = -2f;  // Small downward force to keep grounded
             jumpCount = 0;
         }
         else
         {
-            playerVel.y -= gravity * Time.deltaTime;
+            playerVel.y -= gravity * Time.deltaTime;  // Apply gravity while in air
         }
 
-        moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
+        // Get input for horizontal and vertical movement
+        float inputX = Input.GetAxis("Horizontal");
+        float inputZ = Input.GetAxis("Vertical");
+
+        // Calculate movement direction relative to player orientation
+        moveDir = inputX * transform.right + inputZ * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
+        // Handle jumping input
         jump();
+
+        // Apply vertical velocity (gravity and jump) to character controller
         controller.Move(playerVel * Time.deltaTime);
 
-        if(Input.GetButton("Fire1") && shootTimer >= shootRate)
+        // Update animator Speed parameter based on movement magnitude
+        float moveMagnitude = new Vector3(inputX, 0, inputZ).magnitude;
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", moveMagnitude);
+        }
+
+        // Shooting input and logic
+        if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
             shoot();
         }
@@ -73,19 +105,23 @@ public class playerController : MonoBehaviour, IDamage
 
     void sprint()
     {
-        if(Input.GetButtonDown("Sprint"))
+        if (Input.GetButtonDown("Sprint") && !isSprinting)
         {
-            speed *= sprintMod;
+            speed = baseSpeed * sprintMod;
+            isSprinting = true;
+            if (animator != null) animator.SetBool("IsSprinting", true);
         }
-        else if (Input.GetButtonUp("Sprint"))
+        else if (Input.GetButtonUp("Sprint") && isSprinting)
         {
-            speed /= sprintMod;
+            speed = baseSpeed;
+            isSprinting = false;
+            if (animator != null) animator.SetBool("IsSprinting", false);
         }
     }
 
     void jump()
     {
-        if(Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
@@ -97,7 +133,7 @@ public class playerController : MonoBehaviour, IDamage
         shootTimer = 0;
 
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
         {
             Debug.Log(hit.collider.name);
 
@@ -106,6 +142,13 @@ public class playerController : MonoBehaviour, IDamage
             {
                 dmg.takeDamage(shootDamage);
             }
+        }
+
+        if (animator != null)
+        {
+            // Set Shoot bool true when firing
+            animator.SetBool("Shoot", true);
+            isShooting = true;
         }
     }
 
@@ -124,13 +167,13 @@ public class playerController : MonoBehaviour, IDamage
 
     public void updatePlayerUI()
     {
-        gamemanager.instance.playerHPBar.fillAmount = (float)HP / HPOrig;
+        gamemanager.instance.PlayerHPBar.fillAmount = (float)HP / HPOrig;
     }
 
     IEnumerator screenFlashDamage()
     {
-        gamemanager.instance.playerDamagePanel.SetActive(true);
+        gamemanager.instance.PlayerDamagePanel.SetActive(true);
         yield return new WaitForSeconds(0.1f);
-        gamemanager.instance.playerDamagePanel.SetActive(false);
+        gamemanager.instance.PlayerDamagePanel.SetActive(false);
     }
 }

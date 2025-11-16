@@ -2,90 +2,136 @@
 using UnityEngine.UI;
 using System.Linq;
 
-public class CharacterPanel : MonoBehaviour {
+public class CharacterPanel : MonoBehaviour
+{
+    public GameObject character;
+    public Transform weaponsPanel;
+    public Transform actionsPanel;
+    public Transform camerasPanel;
+    public Button buttonPrefab;
+    public Slider motionSpeed;
 
-	public GameObject character;
-	public Transform weaponsPanel;
-	public Transform actionsPanel;
-	public Transform camerasPanel;
-	public Button buttonPrefab;
-	public Slider motionSpeed;
+    private Actions actions;
+    private PlayerController controller;
+    private Camera[] cameras;
 
-	Actions actions;
-	PlayerController controller;
-	Camera[] cameras;
+    void Start()
+    {
+        Initialize();
+    }
 
-	void Start () {
-		Initialize ();
-	}
+    void Initialize()
+    {
+        if (character == null)
+        {
+            Debug.LogError("Character reference is missing.");
+            return;
+        }
 
-	void Initialize () {
-		actions = character.GetComponent<Actions> ();
-		controller = character.GetComponent<PlayerController> ();
+        actions = character.GetComponent<Actions>();
+        if (actions == null)
+        {
+            Debug.LogWarning("Actions component not found on character.");
+        }
 
-		foreach (PlayerController.Arsenal a in controller.arsenal)
-			CreateWeaponButton(a.name);
+        controller = character.GetComponent<PlayerController>();
+        if (controller == null)
+        {
+            Debug.LogWarning("PlayerController component not found on character.");
+        }
 
-		CreateActionButton("Stay");
-		CreateActionButton("Walk");
-		CreateActionButton("Run");
-		CreateActionButton("Sitting");
-		CreateActionButton("Jump"); 
-		CreateActionButton("Aiming");
-		CreateActionButton("Attack");
-		CreateActionButton("Damage");
-		CreateActionButton("Death Reset", "Death");
+        // Clear previous buttons if any (optional safety)
+        foreach (Transform child in weaponsPanel) Destroy(child.gameObject);
+        foreach (Transform child in actionsPanel) Destroy(child.gameObject);
+        foreach (Transform child in camerasPanel) Destroy(child.gameObject);
 
-		cameras = GameObject.FindObjectsOfType<Camera> ();
-		var sort = from s in cameras orderby s.name select s;
+        if (controller != null && controller.arsenal != null)
+        {
+            foreach (PlayerController.Arsenal a in controller.arsenal)
+                CreateWeaponButton(a.name);
+        }
 
-		foreach (Camera c in sort)
-			CreateCameraButton(c);
+        CreateActionButtonSimple("Stay");
+        CreateActionButtonSimple("Walk");
+        CreateActionButtonSimple("Run");
+        CreateActionButtonSimple("Sitting");
+        CreateActionButtonSimple("Jump");
+        CreateActionButtonSimple("Aiming");
+        CreateActionButtonSimple("Attack");
+        CreateActionButtonSimple("Damage");
+        CreateActionButtonWithMessage("Death Reset", "Death");
 
-		camerasPanel.GetChild (0).GetComponent<Button>().onClick.Invoke();
-	}
+        // Use FindObjectsByType with FindObjectsSortMode.None for better performance as recommended
+        cameras = Object.FindObjectsByType<Camera>(FindObjectsSortMode.None);
+        var sortedCameras = cameras.OrderBy(c => c.name);
 
-	void CreateWeaponButton(string name) {
-		Button button = CreateButton (name, weaponsPanel);
-		button.onClick.AddListener(() => controller.SetArsenal(name));
-	}
+        foreach (Camera c in sortedCameras)
+            CreateCameraButton(c);
 
-	void CreateActionButton(string name) {
-		CreateActionButton(name, name);
-	}
+        // Auto-select first camera button if any
+        if (camerasPanel.childCount > 0)
+        {
+            Button firstCamButton = camerasPanel.GetChild(0).GetComponent<Button>();
+            if (firstCamButton != null)
+                firstCamButton.onClick.Invoke();
+        }
+    }
 
-	void CreateActionButton(string name, string message) {
-		Button button = CreateButton (name, actionsPanel);
-		button.onClick.AddListener(() => actions.SendMessage(message, SendMessageOptions.DontRequireReceiver));
-	}
+    void CreateWeaponButton(string name)
+    {
+        Button button = CreateButton(name, weaponsPanel);
+        if (controller != null)
+            button.onClick.AddListener(() => controller.SetArsenal(name));
+    }
 
-	void CreateCameraButton (Camera c) {
-		Button button = CreateButton (c.name, camerasPanel);
-		button.onClick.AddListener(() => {
-			ShowCamera(c);
-		});
-	}
+    void CreateActionButtonSimple(string name)
+    {
+        CreateActionButtonWithMessage(name, name);
+    }
 
-	Button CreateButton(string name, Transform group) {
-		GameObject obj = (GameObject) Instantiate (buttonPrefab.gameObject);
-		obj.name = name;
-		obj.transform.SetParent(group);
-		obj.transform.localScale = Vector3.one;
-		Text text = obj.transform.GetChild (0).GetComponent<Text> ();
-		text.text = name;
-		return obj.GetComponent<Button> ();
-	}
+    void CreateActionButtonWithMessage(string name, string message)
+    {
+        Button button = CreateButton(name, actionsPanel);
+        if (actions != null)
+            button.onClick.AddListener(() => actions.SendMessage(message, SendMessageOptions.DontRequireReceiver));
+        else
+            Debug.LogWarning($"Actions component missing, cannot send message '{message}'");
+    }
 
-	void ShowCamera (Camera cam) {
-		foreach (Camera c in cameras)
-			c.gameObject.SetActive(c == cam);
-	}
+    void CreateCameraButton(Camera c)
+    {
+        Button button = CreateButton(c.name, camerasPanel);
+        button.onClick.AddListener(() => ShowCamera(c));
+    }
 
-	void Update() {
-		Time.timeScale = motionSpeed.value;
-	}
+    Button CreateButton(string name, Transform group)
+    {
+        GameObject obj = Instantiate(buttonPrefab.gameObject, group);
+        obj.name = name;
+        obj.transform.localScale = Vector3.one;
+        Text text = obj.transform.GetChild(0).GetComponent<Text>();
+        if (text != null)
+            text.text = name;
+        else
+            Debug.LogWarning("Button prefab missing Text component in first child.");
+        return obj.GetComponent<Button>();
+    }
 
-	public void OpenPublisherPage() {
-		Application.OpenURL ("https://www.assetstore.unity3d.com/en/#!/publisher/11008");
-	}
+    void ShowCamera(Camera cam)
+    {
+        if (cameras == null) return;
+
+        foreach (Camera c in cameras)
+            c.gameObject.SetActive(c == cam);
+    }
+
+    void Update()
+    {
+        Time.timeScale = motionSpeed.value;
+    }
+
+    public void OpenPublisherPage()
+    {
+        Application.OpenURL("https://www.assetstore.unity3d.com/en/#!/publisher/11008");
+    }
 }
