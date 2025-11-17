@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4035258909133518438}
-  - component: {fileID: 3003353709456943419}
+  - component: {fileID: 5990135718308859651}
   - component: {fileID: 8341865069870275341}
   - component: {fileID: 2620759327880198840}
   - component: {fileID: 9048296550621920841}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3003353709456943419
+--- !u!114 &5990135718308859651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78f594e2dfc9d8b4b9aa596443f147fd, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damage
+  m_EditorClassIdentifier: Assembly-CSharp::damage
   type: 0
   rb: {fileID: 2620759327880198840}
   damageAmount: 1
@@ -171,8 +171,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.9811321, g: 0.14346743, b: 0.1721932, a: 1}
-      key1: {r: 0.9528302, g: 0.22270451, b: 0.04045032, a: 1}
+      key0: {r: 1, g: 0.0141509175, b: 0.7028052, a: 1}
+      key1: {r: 0.9921569, g: 0.04705883, b: 0.6, a: 1}
       key2: {r: 0.11347453, g: 0.55682164, b: 0.9622642, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

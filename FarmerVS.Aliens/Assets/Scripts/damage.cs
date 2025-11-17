@@ -13,6 +13,7 @@ public class damage : MonoBehaviour
     [SerializeField] float destroyTime;
 
     bool isDamaging;
+    internal Transform target;
 
     void Start()
     {

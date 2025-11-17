@@ -2407,7 +2407,7 @@ MonoBehaviour:
   playerDamagePanel: {fileID: 2996726569460559304}
   player: {fileID: 0}
   controller: {fileID: 0}
-  isPaused: 0
+  cow: {fileID: 0}
 --- !u!1 &5280028903029706246
 GameObject:
   m_ObjectHideFlags: 0

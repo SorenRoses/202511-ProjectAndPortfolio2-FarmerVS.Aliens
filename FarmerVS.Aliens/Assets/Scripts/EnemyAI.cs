@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class enemyAI : MonoBehaviour, IDamage
@@ -7,157 +8,117 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Renderer model;
     [SerializeField] private Transform headPos;
-
     [SerializeField] private int HP = 100;
-    [SerializeField] private int FOV = 90;
     [SerializeField] private int faceTargetSpeed = 5;
-
     [SerializeField] private GameObject bullet;
-    [SerializeField] private float shootRate = 1f;
+    [SerializeField] private float shootRate = 0.3f;
     [SerializeField] private Transform shootPos;
 
     private Color colorOrig = Color.white;
-    private bool cowInTrigger;
-
     private float shootTimer;
-    private float angleToCow;
-    private float stoppingDistanceOrig;
-
-    private Vector3 cowDir;
-
     private Animator animator;
     private static readonly int ShootParam = Animator.StringToHash("Shoot");
+    private Transform player;
+    private Transform[] cows;
+    private Transform target;
 
     void Awake()
     {
-        // Auto-assign if not assigned in inspector, with warnings
-        if (agent == null)
-        {
-            agent = GetComponent<NavMeshAgent>();
-            if (agent == null)
-                Debug.LogError("NavMeshAgent component missing on enemyAI GameObject.");
-        }
-
-        if (model == null)
-        {
-            model = GetComponentInChildren<Renderer>();
-            if (model == null)
-                Debug.LogWarning("Renderer not assigned and no child renderer found.");
-        }
-
-        if (headPos == null)
-        {
-            headPos = transform; // fallback to own transform if no headPos assigned
-            Debug.LogWarning("headPos not assigned, defaulting to transform.");
-        }
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        if (model == null) model = GetComponentInChildren<Renderer>();
+        if (headPos == null) headPos = transform;
 
         animator = GetComponent<Animator>();
-        if (animator == null)
-            Debug.LogWarning("Animator component missing on enemyAI GameObject.");
+
+        if (model != null && model.sharedMaterial != null)
+            colorOrig = model.sharedMaterial.color;
     }
 
     void Start()
     {
-        if (model != null && model.sharedMaterial != null)
-            colorOrig = model.sharedMaterial.color;
-
         if (gamemanager.instance != null)
+        {
+            player = gamemanager.instance.Player?.transform;
+            cows = GameObject.FindGameObjectsWithTag("Cow")
+                .Select(c => c.transform)
+                .ToArray();
             gamemanager.instance.updateGameGoal(1);
-
-        if (agent != null)
-            stoppingDistanceOrig = agent.stoppingDistance;
+        }
     }
 
     void Update()
     {
-        if (agent == null)
-            return;
+        if (agent == null) return;
 
         shootTimer += Time.deltaTime;
 
-        if (cowInTrigger && CanSeeCow())
+        SelectClosestTarget();
+
+        if (target != null)
         {
-            // Shooting and facing handled inside CanSeeCow()
-        }
-        else
-        {
-            if (animator != null && animator.GetBool(ShootParam))
+            agent.SetDestination(target.position);
+
+            Vector3 lookDir = target.position - transform.position;
+            lookDir.y = 0;
+
+            if (lookDir.sqrMagnitude > 0.001f)
             {
-                animator.SetBool(ShootParam, false);
+                Quaternion targetRot = Quaternion.LookRotation(lookDir);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, faceTargetSpeed * Time.deltaTime);
+            }
+
+            if (shootTimer >= shootRate)
+            {
+                ShootTarget();
             }
         }
     }
 
-    private bool CanSeeCow()
+    void SelectClosestTarget()
     {
-        if (gamemanager.instance == null || gamemanager.instance.cow == null || headPos == null)
-            return false;
+        target = player;
+        float minDist = player != null ? Vector3.Distance(transform.position, player.position) : float.MaxValue;
 
-        cowDir = gamemanager.instance.cow.transform.position - headPos.position;
-        angleToCow = Vector3.Angle(cowDir, transform.forward);
-
-        Debug.DrawRay(headPos.position, cowDir, Color.green);
-
-        if (angleToCow > FOV)
-            return false;
-
-        if (Physics.Raycast(headPos.position, cowDir.normalized, out RaycastHit hit))
+        if (cows != null)
         {
-            if (hit.collider.CompareTag("Cow"))
+            foreach (Transform c in cows)
             {
-                agent.SetDestination(gamemanager.instance.cow.transform.position);
-
-                if (shootTimer >= shootRate)
+                if (c == null) continue;
+                float dist = Vector3.Distance(transform.position, c.position);
+                if (dist < minDist)
                 {
-                    Shoot();
+                    target = c;
+                    minDist = dist;
                 }
-
-                if (agent.remainingDistance <= stoppingDistanceOrig)
-                {
-                    FaceTarget();
-                }
-                return true;
             }
         }
-        return false;
     }
 
-    private void FaceTarget()
+    private void ShootTarget()
     {
-        Vector3 lookDirection = new Vector3(cowDir.x, 0, cowDir.z);
-        if (lookDirection.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, faceTargetSpeed * Time.deltaTime);
-        }
-    }
+        shootTimer = 0f;
+        if (bullet == null || shootPos == null || target == null) return;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Cow"))
-        {
-            cowInTrigger = true;
-        }
-    }
+        Collider targetCollider = target.GetComponent<Collider>();
+        Vector3 targetCenter = (targetCollider != null) ? targetCollider.bounds.center : target.position;
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Cow"))
+        Vector3 shootDir = targetCenter - shootPos.position;
+        if (shootDir.sqrMagnitude > 0.001f)
         {
-            cowInTrigger = false;
-            if (animator != null)
-                animator.SetBool(ShootParam, false);
+            Quaternion bulletRot = Quaternion.LookRotation(shootDir);
+            Instantiate(bullet, shootPos.position, bulletRot);
         }
+
+        if (animator != null)
+            animator.SetBool(ShootParam, true);
     }
 
     public void takeDamage(int amount)
     {
         HP -= amount;
-
         if (HP <= 0)
         {
-            if (gamemanager.instance != null)
-                gamemanager.instance.updateGameGoal(-1);
+            gamemanager.instance?.updateGameGoal(-1);
             Destroy(gameObject);
         }
         else
@@ -173,21 +134,6 @@ public class enemyAI : MonoBehaviour, IDamage
             model.sharedMaterial.color = Color.red;
             yield return new WaitForSeconds(0.1f);
             model.sharedMaterial.color = colorOrig;
-        }
-    }
-
-    private void Shoot()
-    {
-        shootTimer = 0f;
-
-        if (bullet != null && shootPos != null)
-        {
-            Instantiate(bullet, shootPos.position, shootPos.rotation);
-        }
-
-        if (animator != null)
-        {
-            animator.SetBool(ShootParam, true);
         }
     }
 }

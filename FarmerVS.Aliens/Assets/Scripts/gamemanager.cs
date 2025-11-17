@@ -16,7 +16,7 @@ public class gamemanager : MonoBehaviour
     [SerializeField] private GameObject playerDamagePanel;
 
     [SerializeField] private GameObject player;
-    [SerializeField] private playerController controller;
+    [SerializeField] private PlayerController controller;
     public GameObject cow;
 
     public bool isPaused { get; private set; }
@@ -24,7 +24,7 @@ public class gamemanager : MonoBehaviour
     private float timeScaleOrig;
     private int gameGoalCount;
 
-    // Provide public read-only properties to expose private fields
+    
     public GameObject Player => player;
     public Image PlayerHPBar => playerHPBar;
     public GameObject PlayerDamagePanel => playerDamagePanel;
@@ -45,9 +45,9 @@ public class gamemanager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         cow = GameObject.FindWithTag("Cow");
-        controller = player != null ? player.GetComponent<playerController>() : null;
+        controller = player != null ? player.GetComponent<PlayerController>() : null;
 
-        // Hide all menus on start
+        
         menuPause?.SetActive(false);
         menuWin?.SetActive(false);
         menuLose?.SetActive(false);
