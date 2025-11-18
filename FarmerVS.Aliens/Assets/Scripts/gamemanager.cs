@@ -6,25 +6,28 @@ public class gamemanager : MonoBehaviour
 {
     public static gamemanager instance;
 
+    
     [SerializeField] private GameObject menuActive;
     [SerializeField] private GameObject menuPause;
     [SerializeField] private GameObject menuWin;
     [SerializeField] private GameObject menuLose;
 
-    [SerializeField] private TMP_Text gameGoalCountText;
+    
+    [SerializeField] private TMP_Text gameGoalCountText; // 
+    [SerializeField] private TMP_Text cowsAliveText;    
     [SerializeField] private Image playerHPBar;
     [SerializeField] private GameObject playerDamagePanel;
 
+    
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerController controller;
-    public GameObject cow;
 
     public bool isPaused { get; private set; }
 
     private float timeScaleOrig;
     private int gameGoalCount;
+    private int cowsAlive; 
 
-    
     public GameObject Player => player;
     public Image PlayerHPBar => playerHPBar;
     public GameObject PlayerDamagePanel => playerDamagePanel;
@@ -32,9 +35,7 @@ public class gamemanager : MonoBehaviour
     void Awake()
     {
         if (instance == null)
-        {
             instance = this;
-        }
         else
         {
             Destroy(gameObject);
@@ -44,18 +45,25 @@ public class gamemanager : MonoBehaviour
         timeScaleOrig = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
-        cow = GameObject.FindWithTag("Cow");
         controller = player != null ? player.GetComponent<PlayerController>() : null;
 
-        
         menuPause?.SetActive(false);
         menuWin?.SetActive(false);
         menuLose?.SetActive(false);
         menuActive = null;
 
         isPaused = false;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void Start()
+    {
+        
+        UpdateGameGoalUI();
+
+        
+        GameObject[] cows = GameObject.FindGameObjectsWithTag("Cow");
+        cowsAlive = cows.Length;
+        UpdateCowUI();
     }
 
     void Update()
@@ -75,6 +83,7 @@ public class gamemanager : MonoBehaviour
         }
     }
 
+    
     public void statePause()
     {
         isPaused = true;
@@ -96,23 +105,45 @@ public class gamemanager : MonoBehaviour
         }
     }
 
+    
     public void updateGameGoal(int amount)
     {
         gameGoalCount += amount;
-        if (gameGoalCountText != null)
-        {
-            gameGoalCountText.text = gameGoalCount.ToString("F0");
-        }
+        UpdateGameGoalUI();
 
         if (gameGoalCount <= 0)
         {
-            // You Win!
             statePause();
             menuActive = menuWin;
             menuActive?.SetActive(true);
         }
     }
 
+    private void UpdateGameGoalUI()
+    {
+        if (gameGoalCountText != null)
+            gameGoalCountText.text = gameGoalCount.ToString("F0");
+    }
+
+    
+    public void UpdateCowCount(int amount)
+    {
+        cowsAlive += amount;
+        UpdateCowUI();
+
+        if (cowsAlive <= 0)
+        {
+            youLose();
+        }
+    }
+
+    private void UpdateCowUI()
+    {
+        if (cowsAliveText != null)
+            cowsAliveText.text = cowsAlive.ToString("F0");
+    }
+
+   
     public void youLose()
     {
         statePause();

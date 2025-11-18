@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +17,7 @@ public class enemyAI : MonoBehaviour, IDamage
     private float shootTimer;
     private Animator animator;
     private static readonly int ShootParam = Animator.StringToHash("Shoot");
+
     private Transform player;
     private Transform[] cows;
     private Transform target;
@@ -39,9 +39,12 @@ public class enemyAI : MonoBehaviour, IDamage
         if (gamemanager.instance != null)
         {
             player = gamemanager.instance.Player?.transform;
-            cows = GameObject.FindGameObjectsWithTag("Cow")
-                .Select(c => c.transform)
-                .ToArray();
+
+            GameObject[] cowObjects = GameObject.FindGameObjectsWithTag("Cow");
+            cows = new Transform[cowObjects.Length];
+            for (int i = 0; i < cowObjects.Length; i++)
+                cows[i] = cowObjects[i].transform;
+
             gamemanager.instance.updateGameGoal(1);
         }
     }
@@ -54,36 +57,47 @@ public class enemyAI : MonoBehaviour, IDamage
 
         SelectClosestTarget();
 
-        if (target != null)
+        if (target == null) return;
+
+        agent.SetDestination(target.position);
+
+        Vector3 lookDir = target.position - transform.position;
+        lookDir.y = 0;
+
+        if (lookDir.sqrMagnitude > 0.001f)
         {
-            agent.SetDestination(target.position);
-
-            Vector3 lookDir = target.position - transform.position;
-            lookDir.y = 0;
-
-            if (lookDir.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRot = Quaternion.LookRotation(lookDir);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, faceTargetSpeed * Time.deltaTime);
-            }
-
-            if (shootTimer >= shootRate)
-            {
-                ShootTarget();
-            }
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, faceTargetSpeed * Time.deltaTime);
         }
+
+        if (shootTimer >= shootRate)
+            ShootTarget();
     }
 
     void SelectClosestTarget()
     {
-        target = player;
-        float minDist = player != null ? Vector3.Distance(transform.position, player.position) : float.MaxValue;
+        target = null;
+        float minDist = float.MaxValue;
 
+        // Check player first  
+        if (player != null)
+        {
+            float dist = Vector3.Distance(transform.position, player.position);
+            if (dist < minDist)
+            {
+                target = player;
+                minDist = dist;
+            }
+        }
+
+        // Check cows  
         if (cows != null)
         {
-            foreach (Transform c in cows)
+            for (int i = 0; i < cows.Length; i++)
             {
+                Transform c = cows[i];
                 if (c == null) continue;
+
                 float dist = Vector3.Distance(transform.position, c.position);
                 if (dist < minDist)
                 {
@@ -97,16 +111,17 @@ public class enemyAI : MonoBehaviour, IDamage
     private void ShootTarget()
     {
         shootTimer = 0f;
+
         if (bullet == null || shootPos == null || target == null) return;
 
-        Collider targetCollider = target.GetComponent<Collider>();
-        Vector3 targetCenter = (targetCollider != null) ? targetCollider.bounds.center : target.position;
+        Collider targetCol = target.GetComponent<Collider>();
+        Vector3 targetPos = (targetCol != null) ? targetCol.bounds.center : target.position;
 
-        Vector3 shootDir = targetCenter - shootPos.position;
+        Vector3 shootDir = targetPos - shootPos.position;
         if (shootDir.sqrMagnitude > 0.001f)
         {
-            Quaternion bulletRot = Quaternion.LookRotation(shootDir);
-            Instantiate(bullet, shootPos.position, bulletRot);
+            Quaternion rot = Quaternion.LookRotation(shootDir);
+            Instantiate(bullet, shootPos.position, rot);
         }
 
         if (animator != null)
@@ -116,6 +131,7 @@ public class enemyAI : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         HP -= amount;
+
         if (HP <= 0)
         {
             gamemanager.instance?.updateGameGoal(-1);
