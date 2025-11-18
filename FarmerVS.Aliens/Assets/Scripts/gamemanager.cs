@@ -11,15 +11,15 @@ public class gamemanager : MonoBehaviour
     [SerializeField] private GameObject menuWin;
     [SerializeField] private GameObject menuLose;
 
-    [SerializeField] private TMP_Text gameGoalCountText;
-    [SerializeField] private Image playerHPBar;
-    [SerializeField] private GameObject playerDamagePanel;
+    public TMP_Text gameGoalCountText;
+    public Image playerHPBar;
+    public GameObject playerDamagePanel;
 
-    [SerializeField] private GameObject player;
-    [SerializeField] private PlayerController controller;
+    public GameObject player;
+    public PlayerController controller;
     public GameObject cow;
 
-    public bool isPaused { get; private set; }
+    public bool isPaused;
 
     private float timeScaleOrig;
     private int gameGoalCount;

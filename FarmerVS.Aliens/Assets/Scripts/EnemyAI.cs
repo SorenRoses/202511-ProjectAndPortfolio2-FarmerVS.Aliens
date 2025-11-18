@@ -5,22 +5,39 @@ using UnityEngine.AI;
 
 public class enemyAI : MonoBehaviour, IDamage
 {
-    [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private Renderer model;
-    [SerializeField] private Transform headPos;
-    [SerializeField] private int HP = 100;
-    [SerializeField] private int faceTargetSpeed = 5;
-    [SerializeField] private GameObject bullet;
-    [SerializeField] private float shootRate = 0.3f;
-    [SerializeField] private Transform shootPos;
+    [SerializeField] NavMeshAgent agent;
+    [SerializeField] Animator anim;
+    [SerializeField] Renderer model;
+    [SerializeField] Transform headPos;
 
-    private Color colorOrig = Color.white;
-    private float shootTimer;
-    private Animator animator;
-    private static readonly int ShootParam = Animator.StringToHash("Shoot");
+    [SerializeField] int HP;
+    [SerializeField] int FOV;
+    [SerializeField] int faceTargetSpeed;
+    [SerializeField] int roamDist;
+    [SerializeField] int roamPauseTime;
+    [SerializeField] int animTranSpeed;
+
+    [SerializeField] GameObject bullet;
+    [SerializeField] float shootRate;
+    [SerializeField] Transform shootPos;
+
+    Color colorOrig;
+
+    bool cowInTrigger;
+
+    float shootTimer;
+    float roamTimer;
+    float angleToPlayer;
+    float stoppingDistOrig;
+
+    static readonly int ShootParam = Animator.StringToHash("Shoot");
     private Transform player;
     private Transform[] cows;
     private Transform target;
+
+    Vector3 startingPos;
+
+    Vector3 playerDir;
 
     void Awake()
     {
@@ -28,7 +45,7 @@ public class enemyAI : MonoBehaviour, IDamage
         if (model == null) model = GetComponentInChildren<Renderer>();
         if (headPos == null) headPos = transform;
 
-        animator = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
 
         if (model != null && model.sharedMaterial != null)
             colorOrig = model.sharedMaterial.color;
@@ -109,8 +126,8 @@ public class enemyAI : MonoBehaviour, IDamage
             Instantiate(bullet, shootPos.position, bulletRot);
         }
 
-        if (animator != null)
-            animator.SetBool(ShootParam, true);
+        if (anim != null)
+            anim.SetBool(ShootParam, true);
     }
 
     public void takeDamage(int amount)

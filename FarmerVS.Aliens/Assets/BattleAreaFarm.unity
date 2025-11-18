@@ -14903,8 +14903,12 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1096295749518068627, guid: e1b0bec7c38f6614a9c446641c711b02, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1096295749518068627, guid: e1b0bec7c38f6614a9c446641c711b02, type: 3}
       propertyPath: sprintMod
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1096295749518068627, guid: e1b0bec7c38f6614a9c446641c711b02, type: 3}
       propertyPath: playerDamagePanel
