@@ -23,8 +23,7 @@ public class damage : MonoBehaviour
 
             if (type == damageType.moving)
             {
-                if (rb != null)
-                    rb.linearVelocity = transform.forward * speed;
+                rb.linearVelocity = transform.forward * speed;
             }
         }
     }
@@ -33,18 +32,15 @@ public class damage : MonoBehaviour
     {
         if (type == damageType.homing)
         {
-            if (rb != null && gamemanager.instance != null && gamemanager.instance.Player != null)
-            {
-                Vector3 direction = (gamemanager.instance.Player.transform.position - transform.position).normalized;
-                rb.linearVelocity = direction * speed;
-            }
+            rb.linearVelocity = (gamemanager.instance.player.transform.position - transform.position).normalized * speed * Time.deltaTime;
+
+
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.isTrigger)
-            return;
+        if (other.isTrigger) return;
 
         IDamage dmg = other.GetComponent<IDamage>();
 
@@ -61,8 +57,8 @@ public class damage : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.isTrigger)
-            return;
+        if (type != damageType.dot) return;
+
 
         IDamage dmg = other.GetComponent<IDamage>();
 

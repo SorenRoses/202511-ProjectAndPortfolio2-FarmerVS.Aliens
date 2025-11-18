@@ -1,5 +1,7 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class gamemanager : MonoBehaviour
@@ -17,7 +19,8 @@ public class gamemanager : MonoBehaviour
 
     public GameObject player;
     public PlayerController controller;
-    public GameObject cow;
+
+    public List<GameObject> cows = new List<GameObject>();
 
     public bool isPaused;
 
@@ -44,10 +47,12 @@ public class gamemanager : MonoBehaviour
         timeScaleOrig = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
-        cow = GameObject.FindWithTag("Cow");
-        controller = player != null ? player.GetComponent<PlayerController>() : null;
+        controller = player?.GetComponent<PlayerController>();
 
-        
+        GameObject[] cowArray = GameObject.FindGameObjectsWithTag("Cow");
+        cows = cowArray.ToList();
+
+
         menuPause?.SetActive(false);
         menuWin?.SetActive(false);
         menuLose?.SetActive(false);
@@ -118,5 +123,10 @@ public class gamemanager : MonoBehaviour
         statePause();
         menuActive = menuLose;
         menuActive?.SetActive(true);
+    }
+
+    public Transform[] GetCowTransforms()
+    {
+        return cows.Where(c => c != null).Select(c => c.transform).ToArray();
     }
 }

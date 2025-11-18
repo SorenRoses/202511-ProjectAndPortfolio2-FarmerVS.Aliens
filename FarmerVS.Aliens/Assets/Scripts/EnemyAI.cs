@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -53,21 +52,24 @@ public class enemyAI : MonoBehaviour, IDamage
 
     void Start()
     {
-        if (gamemanager.instance != null)
-        {
-            player = gamemanager.instance.Player?.transform;
-            cows = GameObject.FindGameObjectsWithTag("Cow")
-                .Select(c => c.transform)
-                .ToArray();
-            gamemanager.instance.updateGameGoal(1);
-        }
+
+        startingPos = transform.position;
+        player = gamemanager.instance.player.transform;
+        cows = gamemanager.instance.GetCowTransforms();
+        gamemanager.instance.updateGameGoal(1);
+        stoppingDistOrig = agent.stoppingDistance;
+        startingPos = transform.position;
     }
 
     void Update()
     {
-        if (agent == null) return;
-
         shootTimer += Time.deltaTime;
+
+        float agentSpeedCur = agent.velocity.normalized.magnitude;
+        float agentSpeedAnim = anim.GetFloat("Speed");
+
+        anim.SetFloat("Speed", Mathf.Lerp(agentSpeedAnim, agentSpeedCur, Time.deltaTime * animTranSpeed));
+
 
         SelectClosestTarget();
 
@@ -109,6 +111,27 @@ public class enemyAI : MonoBehaviour, IDamage
                 }
             }
         }
+    }
+
+    void checkRoam()
+    {
+        if (agent.remainingDistance < 0.01f && roamTimer >= roamPauseTime)
+        {
+            roam();
+        }
+    }
+
+    void roam()
+    {
+        roamTimer = 0;
+        agent.stoppingDistance = 0;
+
+        Vector3 ranPos = Random.insideUnitSphere * roamDist;
+        ranPos += startingPos;
+
+        NavMeshHit hit;
+        NavMesh.SamplePosition(ranPos, out hit, roamDist, 1);
+        agent.SetDestination(hit.position);
     }
 
     private void ShootTarget()

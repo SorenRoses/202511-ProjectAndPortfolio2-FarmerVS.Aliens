@@ -1,28 +1,32 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
+using UnityEngine;
 
 public class playerController : MonoBehaviour, IDamage
 {
    
     [SerializeField] CharacterController controller;
-    [SerializeField] float speed = 5f;
-    [SerializeField] float sprintMod = 2f;
-    [SerializeField] float jumpSpeed = 5f;
-    [SerializeField] int jumpCountMax = 2;
-    [SerializeField] float gravity = 9.8f;
-
-    
     [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] int shootDamage = 10;
-    [SerializeField] int shootDist = 50;
-    [SerializeField] float shootRate = 0.5f;
 
-    
-    [SerializeField] int HP = 100;
+    [SerializeField] int HP;
+    [SerializeField] float speed;
+    [SerializeField] float sprintMod;
+    [SerializeField] float jumpSpeed;
+    [SerializeField] int jumpCountMax;
+    [SerializeField] float gravity;
+
+    [SerializeField] List<gunStats> gunList = new List<gunStats>();
+    [SerializeField] GameObject gunModel;
+    [SerializeField] int shootDamage;
+    [SerializeField] int shootDist;
+    [SerializeField] float shootRate;
+
     [SerializeField] GameObject playerDamagePanel;
 
     Vector3 moveDir;
     Vector3 playerVel;
+
     int jumpCount;
     int HPOrig;
     float shootTimer;
