@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.TextCore.Text;
 
 public class gamemanager : MonoBehaviour
 {
@@ -12,8 +13,11 @@ public class gamemanager : MonoBehaviour
     [SerializeField] private GameObject menuLose;
 
     [SerializeField] private TMP_Text gameGoalCountText;
+    [SerializeField] private TMP_Text waveCounterText;
     [SerializeField] private Image playerHPBar;
     [SerializeField] private GameObject playerDamagePanel;
+
+    [SerializeField] private int totalWaves;
 
     [SerializeField] private GameObject player;
     [SerializeField] private playerController controller;
@@ -22,7 +26,9 @@ public class gamemanager : MonoBehaviour
     public bool isPaused { get; private set; }
 
     private float timeScaleOrig;
-    private int gameGoalCount;
+    public int gameGoalCount;
+    int currentWave = 0;
+
 
     // Provide public read-only properties to expose private fields
     public GameObject Player => player;
@@ -99,11 +105,11 @@ public class gamemanager : MonoBehaviour
     public void updateGameGoal(int amount)
     {
         gameGoalCount += amount;
-        if (gameGoalCountText != null)
-        {
-            gameGoalCountText.text = gameGoalCount.ToString("F0");
-        }
+        gameGoalCountText.text = gameGoalCount.ToString("F0");
 
+        UpdateWaveUI();
+       
+        
         if (gameGoalCount <= 0)
         {
             // You Win!
@@ -118,5 +124,22 @@ public class gamemanager : MonoBehaviour
         statePause();
         menuActive = menuLose;
         menuActive?.SetActive(true);
+    }
+
+    public void SetCurrentWave(int wave)
+    {
+        currentWave = wave;
+        UpdateWaveUI();
+    }
+
+    void UpdateWaveUI()
+    {
+        if (waveCounterText != null)
+        {
+            if (currentWave < 0)
+                waveCounterText.text = "Wave 0/" + totalWaves + "\nGet Ready...";
+            else
+                waveCounterText.text = "Wave " + (currentWave + 1) + "/" + totalWaves + "\n" + gameGoalCount;
+        }
     }
 }

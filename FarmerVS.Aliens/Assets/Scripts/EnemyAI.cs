@@ -61,8 +61,8 @@ public class enemyAI : MonoBehaviour, IDamage
         if (model != null && model.sharedMaterial != null)
             colorOrig = model.sharedMaterial.color;
 
-        if (gamemanager.instance != null)
-            gamemanager.instance.updateGameGoal(1);
+       // if (gamemanager.instance != null)
+           // gamemanager.instance.updateGameGoal(1);
 
         if (agent != null)
             stoppingDistanceOrig = agent.stoppingDistance;
