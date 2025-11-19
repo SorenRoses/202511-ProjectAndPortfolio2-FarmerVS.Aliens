@@ -1,33 +1,50 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
+
 
 public class playerController : MonoBehaviour, IDamage
 {
-   
+    [Header ("----- Components -----")]
     [SerializeField] CharacterController controller;
-    [SerializeField] float speed = 5f;
-    [SerializeField] float sprintMod = 2f;
-    [SerializeField] float jumpSpeed = 5f;
-    [SerializeField] int jumpCountMax = 2;
-    [SerializeField] float gravity = 9.8f;
-
-    
     [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] int shootDamage = 10;
-    [SerializeField] int shootDist = 50;
-    [SerializeField] float shootRate = 0.5f;
 
-    
-    [SerializeField] int HP = 100;
+    [Header("----- Stats -----")]
+    [Range (1, 10)] [SerializeField] int HP;
+    [Range(3, 6)] [SerializeField] float speed;
+    [Range(2, 5)] [SerializeField] float sprintMod;
+    [Range(5, 20)] [SerializeField] float jumpSpeed;
+    [Range(1, 3)] [SerializeField] int jumpCountMax;
+    [Range(15, 50)] [SerializeField] float gravity;
+
+
+    [Header("----- Guns -----")]
+    [SerializeField] int shootDamage;
+    [SerializeField] int shootDist;
+    [SerializeField] float shootRate;
+
+    [Header("----- Audio -----")]
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audStep;
+    [Range(0, 1)] [SerializeField] float audStepVol;
+    [SerializeField] AudioClip[] audJump;
+    [Range(0, 1)] [SerializeField] float audJumpVol;
+    [SerializeField] AudioClip[] audHurt;
+    [Range(0, 1)] [SerializeField] float audHurtVol;
+
+
+
     [SerializeField] GameObject playerDamagePanel;
 
     Vector3 moveDir;
     Vector3 playerVel;
+
     int jumpCount;
     int HPOrig;
     float shootTimer;
     bool isSprinting;
     bool isShooting;
+    bool isPlayingStep;
 
     Animator animator;
     float baseSpeed;
@@ -56,6 +73,11 @@ public class playerController : MonoBehaviour, IDamage
         
         if (controller.isGrounded)
         {
+            if (moveDir.normalized.magnitude > 0.3f && !isPlayingStep)
+            {
+                StartCoroutine(playStep());
+            }
+
             playerVel.y = -2f;
             jumpCount = 0;
         }
@@ -82,12 +104,31 @@ public class playerController : MonoBehaviour, IDamage
         }
     }
 
+    IEnumerator playStep()
+    {
+        isPlayingStep = true;
+        aud.PlayOneShot(audStep[Random.Range(0, audStep.Length)], audStepVol);
+
+        if (isSprinting)
+        {
+            yield return new WaitForSeconds(0.3f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        isPlayingStep = false;
+    }
+
+
     void Jump()
     {
         if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
+            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
         }
     }
 
@@ -105,7 +146,7 @@ public class playerController : MonoBehaviour, IDamage
         }
 
         if (animator != null)
-            animator.SetBool("IsSprinting", isSprinting);
+            animator.SetBool("isSprinting", isSprinting);
     }
 
     void HandleShooting()
@@ -144,9 +185,12 @@ public class playerController : MonoBehaviour, IDamage
         UpdatePlayerUI();
 
         StartCoroutine(ScreenFlashDamage());
+        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
 
         if (HP <= 0)
+        {
             gamemanager.instance.youLose();
+        }
     }
 
     void UpdatePlayerUI()
