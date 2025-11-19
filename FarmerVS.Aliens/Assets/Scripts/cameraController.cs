@@ -2,44 +2,38 @@ using UnityEngine;
 
 public class cameraController : MonoBehaviour
 {
+    [SerializeField] float sens = 200f;
+    [SerializeField] float lockVertMin = -70f, lockVertMax = 70f;
+    [SerializeField] bool invertY = false;
 
-    [SerializeField] int sens;
-    [SerializeField] int lockVertMin, lockVertMax;
-    [SerializeField] bool invertY;
+    float rotX = 0f;
+    Transform player;
 
-    float rotX;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        if (transform.parent != null)
+            player = transform.parent;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // get input
-        float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * sens * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sens * Time.deltaTime;
 
-        // use invertY
-        if (invertY)
-            rotX += mouseY;
-        else
-            rotX -= mouseY;
-
-
-        // clamp the camera on the x axis
+        
+        rotX += invertY ? mouseY : -mouseY;
         rotX = Mathf.Clamp(rotX, lockVertMin, lockVertMax);
-
-        // rotate the camera on the x axis
-
         transform.localRotation = Quaternion.Euler(rotX, 0, 0);
 
-        // rotate the player on the y axis
-
-        transform.parent.Rotate(Vector3.up * mouseX);
-
-
+        
+        if (player != null)
+        {
+            Vector3 euler = player.rotation.eulerAngles;
+            euler.y += mouseX;
+            player.rotation = Quaternion.Euler(euler);
+        }
     }
 }

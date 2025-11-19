@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 712763579568882093}
   - component: {fileID: 712763579568882092}
   - component: {fileID: 712763579568882099}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TailPart1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 712763579579427971}
   - component: {fileID: 712763579579427970}
   - component: {fileID: 712763579579427969}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EyeballL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 712763579595203037}
   - component: {fileID: 712763579595203036}
   - component: {fileID: 712763579595202851}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EPA_RR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,7 +346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763579655628180}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 712763579754732628}
   - component: {fileID: 712763579754732635}
   - component: {fileID: 712763579754732634}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TrotterFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763579921700434}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -526,7 +526,7 @@ GameObject:
   - component: {fileID: 712763580017765517}
   - component: {fileID: 712763580017765516}
   - component: {fileID: 712763580017765523}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: OuterEarR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -637,7 +637,7 @@ GameObject:
   - component: {fileID: 712763580022872973}
   - component: {fileID: 712763580022872972}
   - component: {fileID: 712763580022872979}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EPA_RL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -749,7 +749,7 @@ GameObject:
   - component: {fileID: 712763580090533591}
   - component: {fileID: 712763580090533590}
   - component: {fileID: 712763580090533589}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MouthOpening
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +862,7 @@ GameObject:
   - component: {fileID: 712763580257403069}
   - component: {fileID: 712763580257403068}
   - component: {fileID: 712763580257403011}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: OuterEarL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -973,7 +973,7 @@ GameObject:
   - component: {fileID: 712763580268822950}
   - component: {fileID: 712763580268822949}
   - component: {fileID: 712763580268822948}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PupilL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1084,7 +1084,7 @@ GameObject:
   - component: {fileID: 712763580288394978}
   - component: {fileID: 712763580288394977}
   - component: {fileID: 712763580288394976}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: InnerEarR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1195,7 +1195,7 @@ GameObject:
   - component: {fileID: 712763580293540951}
   - component: {fileID: 712763580293540950}
   - component: {fileID: 712763580293540949}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Torso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1306,7 +1306,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763580399701619}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1344,7 +1344,7 @@ GameObject:
   - component: {fileID: 712763580585805696}
   - component: {fileID: 712763580585805703}
   - component: {fileID: 712763580585805702}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Nostril (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1457,7 +1457,7 @@ GameObject:
   - component: {fileID: 712763580917561832}
   - component: {fileID: 712763580917561839}
   - component: {fileID: 712763580917561838}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TailPart1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1570,7 +1570,7 @@ GameObject:
   - component: {fileID: 712763580947689374}
   - component: {fileID: 712763580947689373}
   - component: {fileID: 712763580947689372}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EPA_FL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1682,7 +1682,7 @@ GameObject:
   - component: {fileID: 712763580949760685}
   - component: {fileID: 712763580949760684}
   - component: {fileID: 712763580949760691}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TrotterFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1790,7 +1790,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763580975560061}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mouth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1825,7 +1825,7 @@ GameObject:
   - component: {fileID: 712763581070966095}
   - component: {fileID: 712763581070966094}
   - component: {fileID: 712763581070966093}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EPA_FR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1934,7 +1934,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763581166232095}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ears
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1969,10 +1969,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763581221244040}
-  - component: {fileID: 54439034210336758}
+  - component: {fileID: 3205445020576620513}
   - component: {fileID: 136692474315646870}
   - component: {fileID: 114884884255993284}
-  m_Layer: 0
+  - component: {fileID: 5842287493630628165}
+  - component: {fileID: 33925741530375663}
+  m_Layer: 9
   m_Name: Cow
   m_TagString: Cow
   m_Icon: {fileID: 0}
@@ -1995,33 +1997,23 @@ Transform:
   - {fileID: 712763581686785847}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &54439034210336758
-Rigidbody:
+--- !u!114 &3205445020576620513
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712763581221244047}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 1
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f36a46596a4164fbd9ba4c075bc004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::cowHealth
+  HP: 10
+  wanderRadius: 12
+  wanderDelay: 3
+  fleeDistance: 10
+  fleeSpeed: 6
 --- !u!136 &136692474315646870
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2062,7 +2054,56 @@ MonoBehaviour:
   RearLegL: {fileID: 0}
   RearLegR: {fileID: 0}
   moveAngle: 90
-  movSpeed: 1
+  movSpeed: 2
+--- !u!195 &5842287493630628165
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712763581221244047}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!54 &33925741530375663
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712763581221244047}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &712763581223368524
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,7 +2116,7 @@ GameObject:
   - component: {fileID: 712763581223368520}
   - component: {fileID: 712763581223368527}
   - component: {fileID: 712763581223368526}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TrotterFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2186,7 +2227,7 @@ GameObject:
   - component: {fileID: 712763581229213349}
   - component: {fileID: 712763581229213348}
   - component: {fileID: 712763581229213355}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PupilR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2297,7 +2338,7 @@ GameObject:
   - component: {fileID: 712763581357472630}
   - component: {fileID: 712763581357472629}
   - component: {fileID: 712763581357472628}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Nostril (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2407,7 +2448,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763581364617292}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2443,7 +2484,7 @@ GameObject:
   - component: {fileID: 712763581373350219}
   - component: {fileID: 712763581373350218}
   - component: {fileID: 712763581373350217}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: InnerEarL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2551,7 +2592,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763581514132500}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2589,7 +2630,7 @@ GameObject:
   - component: {fileID: 712763581624280568}
   - component: {fileID: 712763581624280575}
   - component: {fileID: 712763581624280574}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EyeballR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2701,7 +2742,7 @@ GameObject:
   - component: {fileID: 712763581651946134}
   - component: {fileID: 712763581651946133}
   - component: {fileID: 712763581651946132}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TrotterFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2809,7 +2850,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712763581686785847}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BaseAnimal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2847,7 +2888,7 @@ GameObject:
   - component: {fileID: 6128128280033468116}
   - component: {fileID: 1810700888082435088}
   - component: {fileID: 3622940651170291953}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Teat (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2960,7 +3001,7 @@ GameObject:
   - component: {fileID: 6156528675247094571}
   - component: {fileID: 8122073404261126993}
   - component: {fileID: 5951067245393906683}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Teat (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3073,7 +3114,7 @@ GameObject:
   - component: {fileID: 3981039679043818166}
   - component: {fileID: 5154525693582014881}
   - component: {fileID: 4293097731026940293}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Teat (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3186,7 +3227,7 @@ GameObject:
   - component: {fileID: 6473620880157747087}
   - component: {fileID: 6112658979534258947}
   - component: {fileID: 5393788066796484000}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3299,7 +3340,7 @@ GameObject:
   - component: {fileID: 3710691107792832193}
   - component: {fileID: 1507875239990999105}
   - component: {fileID: 7412432628434077031}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Udder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3416,7 +3457,7 @@ GameObject:
   - component: {fileID: 1036838945133860408}
   - component: {fileID: 6651979295278981238}
   - component: {fileID: 8508993890904707952}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Teat (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3528,7 +3569,7 @@ GameObject:
   - component: {fileID: 3904289949273810204}
   - component: {fileID: 2144401862317178385}
   - component: {fileID: 2013012880962159080}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ShadingPart (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
