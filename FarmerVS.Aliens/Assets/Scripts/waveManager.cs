@@ -6,13 +6,15 @@ public class waveManager : MonoBehaviour
     public static waveManager instance;
 
     [SerializeField] spawner [] waveSpawner;
-    [SerializeField] float [] delayBeforEachWave;
+    [SerializeField] float [] delayBeforeEachWave;
     [SerializeField] float timeBetweenWaves;
     [SerializeField] bool autoStartFirstWave = true;
 
-    int currentWave = 0;
+    [SerializeField] string enemyTag = "Enemy";
+
+    public int currentWave = 0;
     bool waveActive = false;
-    private bool advancingToNextWave = false;
+    private bool isTransitioning= false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -32,50 +34,72 @@ public class waveManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+     void Update()
     {
-        if (waveActive && gamemanager.instance.gameGoalCount <= 0)
+        if (!waveActive || isTransitioning)
+            return;
+        if (currentWave < 0 || currentWave >= waveSpawner.Length)
+            return;
+       
+
+        spawner currentSpawner = waveSpawner[currentWave];
+
+        if (currentSpawner.HasFinishedSpawning && !AnyEnemiesAlive())
+        
         {
-            advancingToNextWave = true;
+            isTransitioning = true;
             StartCoroutine(GoToNextWave());
         }
     }
+
+    public bool AnyEnemiesAlive()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        return enemies.Length > 0;
+       
+    }
+
+
 
     IEnumerator StartWave(int waveIndex)
     {
         currentWave = waveIndex;
         waveActive = true;
+        isTransitioning = false;
 
-        yield return new WaitForSeconds(delayBeforEachWave[waveIndex]);
+        gamemanager.instance.SetCurrentWave(waveIndex); 
+
+        yield return new WaitForSeconds(delayBeforeEachWave[waveIndex]);
 
         for (int i = 0; i < waveSpawner.Length; i++)
             waveSpawner[i].StopSpawning();
 
         waveSpawner[waveIndex].StartSpawning();
 
-        gamemanager.instance.SetCurrentWave(waveIndex);
     }
 
     IEnumerator GoToNextWave()
     {
-        waveActive = false;
         yield return new WaitForSeconds(timeBetweenWaves);
 
         int next = currentWave + 1;
         if (next < waveSpawner.Length)
         {
-            advancingToNextWave = false;
             StartCoroutine(StartWave(next));
         }
         else
         {
-            advancingToNextWave = false;
+            waveActive = false; 
+            isTransitioning = false;
+            gamemanager.instance?.CheckForWin();
         }
+
     }
   
     public void StartFirstWave()
     {
         StopAllCoroutines();
+        isTransitioning = false;
         StartCoroutine(StartWave(0));
     }
   

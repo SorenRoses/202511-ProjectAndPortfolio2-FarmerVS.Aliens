@@ -11,15 +11,12 @@ public class spawner : MonoBehaviour
     float spawnTimer;
     bool startSpawning;
 
-    
+    public bool HasFinishedSpawning => spawnCount >= spawnAmount;
     public void StartSpawning()
     {
         startSpawning = true;
         spawnCount = 0;
         spawnTimer = 0;
-
-        
-            gamemanager.instance.updateGameGoal(spawnAmount);
     }
 
     public void StopSpawning()

@@ -9,6 +9,8 @@ TagManager:
   - Chicken
   - Pig
   - Ground
+  - Undefined
+  - Enemy
   layers:
   - Default
   - TransparentFX

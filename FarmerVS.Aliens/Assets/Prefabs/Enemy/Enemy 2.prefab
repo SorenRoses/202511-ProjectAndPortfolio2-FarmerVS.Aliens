@@ -1067,9 +1067,9 @@ GameObject:
   - component: {fileID: 5123729601762695368}
   - component: {fileID: 4341687207637266830}
   - component: {fileID: 554437591602656363}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy 2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1108,7 +1108,6 @@ MonoBehaviour:
   model: {fileID: 13700000, guid: f4209d51d1ad0434299f2d498ee076ba, type: 3}
   headPos: {fileID: 8323074080138388277}
   HP: 3
-  FOV: 180
   faceTargetSpeed: 8
   bullet: {fileID: 1203817738937806561, guid: 23fa38475caab0247a3cc5ac19d4373c, type: 3}
   shootRate: 1

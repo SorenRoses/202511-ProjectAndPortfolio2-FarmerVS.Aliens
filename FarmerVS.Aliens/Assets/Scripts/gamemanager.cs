@@ -13,7 +13,8 @@ public class gamemanager : MonoBehaviour
     [SerializeField] private GameObject menuLose;
 
     
-    [SerializeField] private TMP_Text gameGoalCountText; // 
+    [SerializeField] private TMP_Text gameGoalCountText;
+    [SerializeField] private TMP_Text waveCounterText;
     [SerializeField] private TMP_Text cowsAliveText;    
     [SerializeField] private Image playerHPBar;
     [SerializeField] private GameObject playerDamagePanel;
@@ -21,13 +22,14 @@ public class gamemanager : MonoBehaviour
     
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerController controller;
+    [SerializeField] private int totalWaves;
 
     public bool isPaused { get; private set; }
 
     private float timeScaleOrig;
-    private int gameGoalCount;
-    private int cowsAlive; 
-
+    public int gameGoalCount;
+    private int cowsAlive;
+    private int currentWave = -1;
     public GameObject Player => player;
     public Image PlayerHPBar => playerHPBar;
     public GameObject PlayerDamagePanel => playerDamagePanel;
@@ -59,7 +61,7 @@ public class gamemanager : MonoBehaviour
     {
         
         UpdateGameGoalUI();
-
+        UpdateWaveUI();
         
         GameObject[] cows = GameObject.FindGameObjectsWithTag("Cow");
         cowsAlive = cows.Length;
@@ -110,8 +112,9 @@ public class gamemanager : MonoBehaviour
     {
         gameGoalCount += amount;
         UpdateGameGoalUI();
+        UpdateWaveUI();
 
-        if (gameGoalCount <= 0)
+        if (waveManager.instance != null && waveManager.instance.currentWave >= totalWaves -1 && !waveManager.instance.AnyEnemiesAlive())
         {
             statePause();
             menuActive = menuWin;
@@ -123,6 +126,7 @@ public class gamemanager : MonoBehaviour
     {
         if (gameGoalCountText != null)
             gameGoalCountText.text = gameGoalCount.ToString("F0");
+          
     }
 
     
@@ -150,4 +154,29 @@ public class gamemanager : MonoBehaviour
         menuActive = menuLose;
         menuActive?.SetActive(true);
     }
+
+    public void SetCurrentWave(int wave)
+    {
+        currentWave = wave;
+        UpdateWaveUI();
+    }
+
+    public void CheckForWin()
+    {
+        if (currentWave >= totalWaves - 1 && (waveManager.instance == null || !waveManager.instance.AnyEnemiesAlive()))
+        {
+            statePause();
+            menuActive = menuWin;
+            menuActive?.SetActive(true);
+        }
+    }
+
+    void UpdateWaveUI()
+    {
+        if (waveCounterText != null)
+        {
+           waveCounterText.text = string.Format(waveCounterText.text, (currentWave + 1).ToString("F0"), totalWaves.ToString("F0"), gameGoalCount.ToString("F0"));
+        }
+    }
+
 }

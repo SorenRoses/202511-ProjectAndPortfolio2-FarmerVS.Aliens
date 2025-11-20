@@ -30,8 +30,7 @@ public class enemyAI : MonoBehaviour, IDamage
 
         animator = GetComponent<Animator>();
 
-        if (model != null && model.sharedMaterial != null)
-            colorOrig = model.sharedMaterial.color;
+        
     }
 
     void Start()
@@ -44,6 +43,9 @@ public class enemyAI : MonoBehaviour, IDamage
             cows = new Transform[cowObjects.Length];
             for (int i = 0; i < cowObjects.Length; i++)
                 cows[i] = cowObjects[i].transform;
+
+            if (model != null && model.material != null)
+                colorOrig = model.material.color;
 
             gamemanager.instance.updateGameGoal(1);
         }
@@ -134,7 +136,7 @@ public class enemyAI : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
-            gamemanager.instance?.updateGameGoal(-1);
+            //gamemanager.instance?.updateGameGoal(-1);
             Destroy(gameObject);
         }
         else
@@ -147,9 +149,9 @@ public class enemyAI : MonoBehaviour, IDamage
     {
         if (model != null && model.sharedMaterial != null)
         {
-            model.sharedMaterial.color = Color.red;
+            model.material.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            model.sharedMaterial.color = colorOrig;
+            model.material.color = colorOrig;
         }
     }
 }
