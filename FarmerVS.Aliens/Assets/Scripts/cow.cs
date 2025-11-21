@@ -5,11 +5,11 @@ using UnityEngine.AI;
 public class Cow : MonoBehaviour, IDamage
 {
     
-    [SerializeField] private int HP = 50;
-    [SerializeField] private float wanderRadius = 12f;
-    [SerializeField] private float wanderDelay = 3f;
-    [SerializeField] private float fleeDistance = 10f;
-    [SerializeField] private float fleeSpeed = 6f;
+    [SerializeField] private int HP;
+    [SerializeField] private float wanderRadius;
+    [SerializeField] private float wanderDelay;
+    [SerializeField] private float fleeDistance;
+    [SerializeField] private float fleeSpeed;
 
     private NavMeshAgent agent;
     private Renderer model;
