@@ -1,211 +1,169 @@
 using UnityEngine;
 using System.Collections;
-using System.IO;
+using System.Collections.Generic;
 
-
-public class playerController : MonoBehaviour, IDamage
+public class playerController : MonoBehaviour, IDamage, IPickup
 {
-    [Header ("----- Components -----")]
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreLayer;
 
-    [Header("----- Stats -----")]
-    [Range (1, 10)] [SerializeField] int HP;
-    [Range(3, 6)] [SerializeField] float speed;
-    [Range(2, 5)] [SerializeField] float sprintMod;
-    [Range(5, 20)] [SerializeField] float jumpSpeed;
-    [Range(1, 3)] [SerializeField] int jumpCountMax;
-    [Range(15, 50)] [SerializeField] float gravity;
+    [SerializeField] int HP;
+    [SerializeField] int speed;
+    [SerializeField] int sprintMod;
+    [SerializeField] int JumpSpeed;
+    [SerializeField] int maxJumps;
+    [SerializeField] int gravity;
 
-
-    [Header("----- Guns -----")]
+    [SerializeField] List<gunStats> gunList = new List<gunStats>();
+    [SerializeField] GameObject gunModel;
     [SerializeField] int shootDamage;
     [SerializeField] int shootDist;
     [SerializeField] float shootRate;
 
-    [Header("----- Audio -----")]
-    [SerializeField] AudioSource aud;
-    [SerializeField] AudioClip[] audStep;
-    [Range(0, 1)] [SerializeField] float audStepVol;
-    [SerializeField] AudioClip[] audJump;
-    [Range(0, 1)] [SerializeField] float audJumpVol;
-    [SerializeField] AudioClip[] audHurt;
-    [Range(0, 1)] [SerializeField] float audHurtVol;
-
-
-
-    [SerializeField] GameObject playerDamagePanel;
 
     Vector3 moveDir;
     Vector3 playerVel;
 
     int jumpCount;
     int HPOrig;
+    int gunListPos;
+
     float shootTimer;
-    bool isSprinting;
-    bool isShooting;
-    bool isPlayingStep;
 
-    Animator animator;
-    float baseSpeed;
-
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         HPOrig = HP;
-        animator = GetComponent<Animator>();
-        baseSpeed = speed;
-        UpdatePlayerUI();
+        updatePlayerUI();
     }
 
+    // Update is called once per frame
     void Update()
     {
-        if (gamemanager.instance != null && gamemanager.instance.isPaused) return;
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red);
 
         shootTimer += Time.deltaTime;
 
-        HandleMovement();
-        HandleSprinting();
-        HandleShooting();
+        movement();
+        sprint();
     }
 
-    void HandleMovement()
+    void movement()
     {
-        
         if (controller.isGrounded)
         {
-            if (moveDir.normalized.magnitude > 0.3f && !isPlayingStep)
-            {
-                StartCoroutine(playStep());
-            }
-
-            playerVel.y = -2f;
+            playerVel = Vector3.zero;
             jumpCount = 0;
         }
         else
         {
             playerVel.y -= gravity * Time.deltaTime;
         }
-
-        float inputX = Input.GetAxis("Horizontal");
-        float inputZ = Input.GetAxis("Vertical");
-
-        moveDir = transform.right * inputX + transform.forward * inputZ;
+        moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
-        Jump();
-
+        jump();
         controller.Move(playerVel * Time.deltaTime);
 
-       
-        if (animator != null)
-        {
-            float moveMag = new Vector3(inputX, 0, inputZ).magnitude;
-            animator.SetFloat("Speed", moveMag);
-        }
-    }
-
-    IEnumerator playStep()
-    {
-        isPlayingStep = true;
-        aud.PlayOneShot(audStep[Random.Range(0, audStep.Length)], audStepVol);
-
-        if (isSprinting)
-        {
-            yield return new WaitForSeconds(0.3f);
-        }
-        else
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        isPlayingStep = false;
-    }
-
-
-    void Jump()
-    {
-        if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
-        {
-            playerVel.y = jumpSpeed;
-            jumpCount++;
-            aud.PlayOneShot(audJump[Random.Range(0, audJump.Length)], audJumpVol);
-        }
-    }
-
-    void HandleSprinting()
-    {
-        if (Input.GetButton("Sprint"))
-        {
-            speed = baseSpeed * sprintMod;
-            isSprinting = true;
-        }
-        else
-        {
-            speed = baseSpeed;
-            isSprinting = false;
-        }
-
-        if (animator != null)
-            animator.SetBool("isSprinting", isSprinting);
-    }
-
-    void HandleShooting()
-    {
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
         {
-            shootTimer = 0f;
-
-            RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
-            {
-                IDamage dmg = hit.collider.GetComponent<IDamage>();
-                if (dmg != null)
-                    dmg.takeDamage(shootDamage);
-            }
-
-            if (animator != null)
-            {
-                animator.SetBool("Shoot", true);
-                isShooting = true;
-            }
+            shoot();
         }
 
-        
-        if (!Input.GetButton("Fire1") && isShooting)
+        selectGun();
+    }
+
+    void sprint()
+    {
+        if (Input.GetButtonDown("Sprint"))
         {
-            isShooting = false;
-            if (animator != null)
-                animator.SetBool("Shoot", false);
+            speed *= sprintMod;
+        }
+        else if (Input.GetButtonUp("Sprint"))
+        {
+            speed /= sprintMod;
+        }
+    }
+
+    void jump()
+    {
+        if (Input.GetButtonDown("Jump") && jumpCount < maxJumps)
+        {
+            playerVel.y = JumpSpeed;
+            jumpCount++;
+        }
+    }
+
+    void shoot()
+    {
+        shootTimer = 0;
+
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        {
+            Debug.Log(hit.collider.name);
+
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            if (dmg != null)
+            {
+                dmg.takeDamage(shootDamage);
+            }
         }
     }
 
     public void takeDamage(int amount)
     {
         HP -= amount;
-        UpdatePlayerUI();
-
-        StartCoroutine(ScreenFlashDamage());
-        aud.PlayOneShot(audHurt[Random.Range(0, audHurt.Length)], audHurtVol);
+        updatePlayerUI();
+        StartCoroutine(screenFlashDamage());
 
         if (HP <= 0)
         {
+            // You Lose!!!
             gamemanager.instance.youLose();
         }
     }
-
-    void UpdatePlayerUI()
+    public void updatePlayerUI()
     {
-        if (gamemanager.instance != null && gamemanager.instance.PlayerHPBar != null)
-            gamemanager.instance.PlayerHPBar.fillAmount = (float)HP / HPOrig;
+        gamemanager.instance.PlayerHPBar.fillAmount = (float)HP / HPOrig;
     }
 
-    IEnumerator ScreenFlashDamage()
+    IEnumerator screenFlashDamage()
     {
-        if (playerDamagePanel != null)
+        gamemanager.instance.PlayerDamagePanel.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gamemanager.instance.PlayerDamagePanel.SetActive(false);
+    }
+
+    public void getGunStats(gunStats gun)
+    {
+        gunList.Add(gun);
+        gunListPos = gunList.Count - 1;
+
+        changeGun();
+    }
+
+    void changeGun()
+    {
+        shootDamage = gunList[gunListPos].shootDamage;
+        shootDist = gunList[gunListPos].shootDist;
+        shootRate = gunList[gunListPos].shootRate;
+
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunListPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunListPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+    }
+
+    void selectGun()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && gunListPos < gunList.Count - 1)
         {
-            playerDamagePanel.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
-            playerDamagePanel.SetActive(false);
+            gunListPos++;
+            changeGun();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && gunListPos > 0)
+        {
+            gunListPos--;
+            changeGun();
         }
     }
 }
