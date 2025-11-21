@@ -12,7 +12,7 @@ public class enemyAI : MonoBehaviour, IDamage
     [SerializeField] private Collider weaponCol;
 
     [Header("Stats")]
-    [SerializeField] private int H;
+    [SerializeField] private int HP;
     [SerializeField] private int faceTargetSpeed;
     [SerializeField] private int FOV;
     [SerializeField] private int roamDist;
