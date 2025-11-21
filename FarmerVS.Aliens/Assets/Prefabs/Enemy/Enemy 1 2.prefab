@@ -1074,12 +1074,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 6868298562050350914}
+  anim: {fileID: 0}
   model: {fileID: 13700000, guid: f4209d51d1ad0434299f2d498ee076ba, type: 3}
   headPos: {fileID: 2645813647985129655}
+  weaponCol: {fileID: 0}
   HP: 3
   faceTargetSpeed: 8
+  FOV: 120
+  roamDist: 20
+  roamPauseTime: 1
+  animTransSpeed: 5
   bullet: {fileID: 1203817738937806561, guid: 23fa38475caab0247a3cc5ac19d4373c, type: 3}
-  shootRate: 1
+  shootRate: 0.3
   shootPos: {fileID: 9210749352716716858}
 --- !u!195 &6868298562050350914
 NavMeshAgent:

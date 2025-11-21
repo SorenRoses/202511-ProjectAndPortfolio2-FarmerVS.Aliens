@@ -48,7 +48,7 @@ public class damage : MonoBehaviour
 
         IDamage dmg = other.GetComponent<IDamage>();
 
-        if (dmg != null && type == damageType.dot)
+        if (dmg != null && type != damageType.dot)
         {
             dmg.takeDamage(damageAmount);
         }
